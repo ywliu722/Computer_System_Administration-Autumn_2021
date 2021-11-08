@@ -1,0 +1,55 @@
+'''
+This file is used to explain the parts which are not written in the teachers and TAs slides.
+If there are some "long" commands, you can use PuTTy to access the machine which can use "copy and paste".
+'''
+
+Task I: "judge" run sudo without password
+    1. switch to root and change the editor first
+        $ su -
+        $ seten EDITOR ee
+    2. edit the sudo privilege
+        $ visodu
+            insert "judge ALL=(ALL) NOPASSWD: ALL"
+
+Task II: enable sshd
+    1. create ~/.ssh folder and generate global key
+        $ mkdir -p ~/.ssh
+        $ chmod 700 ~/.ssh
+        $ ssh-keygen -A
+    2. fetch public key and install it
+        $ fetch https://nasa.cs.nctu.edu.tw/sa/2021/nasakey.pub
+        $ cat nasakey.pub >> /home/judge/.ssh/authorized_keys
+    3. restart sshd
+        $ sudo /etc/rc.d/sshd restart
+
+Task III: establish wireguard link to online judge system
+    1. edit configuration file
+        $ su -
+        $ ee /usr/local/etc/wireguard/wg0.conf
+            [Interface]
+            Address = 10.113.0.ID/32
+            PrivateKey = [WG_PRIVATE_KEY]
+            
+            [Peer]
+            PublicKey = [WG_SERVER_PUBLIC_KEY]
+            AllowedIPs = 10.113.0.0/16
+            Endpoint = nasa.nycucs.org:51821
+            PersistentKeepalive = 25
+    2. add wireguard link, enable and start it
+        $ sysrc wireguard_interfaces=wg0
+        $ service wireguard enable
+        $ service wireguard start
+    3. reboot (I do not know it is necessary or not.)
+        $ sudo reboot
+
+References
+    Task I
+        1. visodu: http://linux.vbird.org/linux_basic/0410accountmanager.php#visudo
+    
+    Task II
+        1. create ~/.ssh folder: https://blog.gtwang.org/linux/linux-ssh-public-key-authentication/
+        2. generate global key: https://herrbischoff.com/2017/01/how-to-fix-ssh-no-host-key-files-found/
+        3. restart sshd: https://forums.freebsd.org/threads/service-sshd-restart.33667/
+    
+    Task III
+        1. wireguard link establish: https://bsdrp.net/documentation/examples/gre_ipsec_and_openvpn#wireguard

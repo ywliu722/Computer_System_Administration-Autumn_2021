@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  margin:0 2px;
+  width: 350px;
+  padding: 2px;
+}
+
+
+/* Clear floats after the columns */
+.row:after {
+  padding: 2px;
+  content: "";
+  display: table;
+  clear: both;
+}
+p {text-align: center;
+   font-family: "Times New Roman";
+   font-weight:bold;}
+pre {font-family: "Times New Roman"}
+</style>
+
+<body>
+
+<button onclick="trigger1(); trigger2();">Start</button>
+
+<div class="row">
+  
+  <div class="column" style="background-color:rgb(245, 235, 214) ;">
+  	<p>ws:</p>
+  </div>
+  <div class="column" style="background-color:rgb(212, 247, 252);">
+  	<p>wss:</p>
+  </div>
+</div>
+
+<div class="row">
+  
+  <div class="column">
+  	<pre id="trigger1"></pre>
+    <script>
+      function log1(msg) {
+        document.getElementById("trigger1").style = "background-color:rgb(245, 235, 214);";
+			  document.getElementById('trigger1').textContent += msg + '\n';
+		  }
+		  function trigger1() {
+			  var ws = new WebSocket('ws://20_ws.nycu.cs/wsconnect');
+			  ws.onmessage = function(event) {
+				  log1(event.data);
+			  };
+		  }
+	  </script>
+  </div>
+  <div class="column">
+  	<pre id="trigger2"></pre>
+    <script>
+      function log2(msg) {
+        document.getElementById("trigger2").style = "background-color:rgb(212, 247, 252);";
+			  document.getElementById('trigger2').textContent += msg + '\n';
+		  }
+		  function trigger2() {
+        var wss = new WebSocket('wss://20.nycu.cs/wsconnect');
+			  wss.onmessage = function(event) {
+				  log2(event.data);
+			  };
+		  }
+	  </script>
+  </div>
+</div>
+
+</body>
+</html>

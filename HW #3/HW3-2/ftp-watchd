@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# PROVIDE: ftp_watchd
+# REQUIRE: pure-ftpd DAEMON
+
+. /etc/rc.subr
+
+name="ftp_watchd"
+rcvar="ftp_watchd_enable"
+command="/usr/local/sbin/pure-uploadscript"
+pidfile="/var/run/pure-uploadscript.pid"
+
+load_rc_config "ftp_watchd"
+
+ftp_watchd_uploadscript=${ftp_watchd_command:-"/usr/local/bin/uploadscript.sh"}
+command_args="-B -r ${ftp_watchd_uploadscript} -p $pidfile"
+
+stop_cmd=stop_cmd
+
+stop_cmd() {
+    pid=$(check_pidfile $pidfile $command)
+    if [ -z "$pid" ]; then #ftp-watchd is not running
+        echo "$name is not running."
+    else
+    echo Kill: $pid
+    kill -9 $pid
+    fi
+}
+
+run_rc_command "$1"

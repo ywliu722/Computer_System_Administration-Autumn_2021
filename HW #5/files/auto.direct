@@ -1,0 +1,3 @@
+/net/data/public1       -ro,nfsv4        10.113.254.20:/vol/public1
+/net/data/public2       -ro,nfsv4        10.113.254.20:/vol/public2
+/net/data/stu20         -rw,nfsv4        10.113.254.20:/vol/stu20
